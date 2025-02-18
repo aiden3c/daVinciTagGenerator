@@ -74,9 +74,7 @@ def onselect(evt, id, uid1, uid2, pword, pack, used):
     used.set(value[5])
 
 
-def generateTagData(status, uid1, uid2, pword, pack, temperature, spoolsize, page9):
-    status.set("Status: Generating Tag Data")
-    return
+def generateTagData(status, uid1, uid2, pword, pack, temperature, spoolsize, page9, flipper):
     #Page  300m/300m        200m/200/       PLA/190*        PLA/210*
     #10,11 E0930400         400D0300
     #20    E0930400         400D0300
@@ -116,11 +114,43 @@ def generateTagData(status, uid1, uid2, pword, pack, temperature, spoolsize, pag
     #force only the 0A.  Also, do not want it on the last line
     # Word is 45 pages 0 based so it is 0-44.  sub 1 from len(word)
     # to get last page  The resulting txt file is 404 bytes
-    fname=uid1 + 'tagdata.txt'
+    fname=uid1 + 'filament.nfc'
+    if not flipper:
+        fname=uid1 + 'tagdata.txt'
     f1=open(fname, 'w')
-    for x in range(len(word)-1):
-        f1.write(word[x]  + chr(10))
-    f1.write(word[len(word)-1])
+    if not flipper:
+        for x in range(len(word)-1):
+            f1.write(word[x]  + chr(10))
+        f1.write(word[len(word)-1])
+    else:
+        header = """Filetype: Flipper NFC device
+Version: 3
+# Nfc device type can be UID, Mifare Ultralight, Mifare Classic, Bank card
+Device type: NTAG213
+# UID, ATQA and SAK are common for all formats
+"""
+        header += "UID: " + ' '.join([uid1[j:j+2] for j in range(0, len(uid1), 2)]) + ' ' + ' '.join([uid2[j:j+2] for j in range(0, len(uid2), 2)]) + "\n"
+        header += """ATQA: 00 44
+SAK: 00
+# Mifare Ultralight specific data
+Data format version: 1
+Signature: DE AD BE EF DE AD BE EF DE AD BE EF DE AD BE EF DE AD BE EF DE AD BE EF DE AD BE EF DE AD BE EF
+Mifare version: 00 04 04 04 01 00 0F 03
+Counter 0: 0
+Tearing 0: 00
+Counter 1: 0
+Tearing 1: 00
+Counter 2: 0
+Tearing 2: 00
+Pages total: 45
+Pages read: 45\n"""
+        f1.write(header)
+        for i, line in enumerate(word):
+            # Split the line into pairs of hex characters
+            hex_pairs = [line[j:j+2] for j in range(0, len(line), 2)]
+            # Format the page output
+            f1.write(f"Page {i}: {' '.join(hex_pairs)}\n")
+        f1.write("Failed authentication attempts: 0")
     f1.close()
     status.set("Status: New tag data written as " + fname)
 

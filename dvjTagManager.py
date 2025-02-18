@@ -23,11 +23,12 @@ from SQLbackend import *
 #Create the window object    # All windows object between window=Tk() and window.mainloop()
 window=Tk()
 #window.geometry("650x400")
-window.title("DaVinci Jr Password Manager")
+window.title("DaVinci Tag Generator")
 
 temperature=IntVar()
 spoolsize=IntVar()
 sStatus=StringVar()
+flipper = BooleanVar()
 
 # Menu System
 menubar = Menu(window)
@@ -117,18 +118,26 @@ sb1.grid(row=10, column=2, rowspan=10, sticky=W, ipady = 60)
 list1.configure(yscrollcommand=sb1.set)
 sb1.configure(command=list1.yview)
 
-flipper = IntVar()
 flipper_check = Checkbutton(window, text="Save in Flipper Zero format.", variable=flipper)
 flipper_check.grid(row=0, column=1)
 
-b1=Button(window, text="Get New NFC Tag", bg='green', width=16, command=lambda: newUID(sStatus, id_text, UID1_text, UID2_text, password_text, pack_text))
+def save_tag(status, id, uid1, uid2, pword, pack, temperature, spoolsize, page9, flipper):
+    useUID(sStatus, id)
+    generateTagData(status, uid1, uid2, pword, pack, temperature, spoolsize, page9, flipper)
+
+b7=Button(window, text="Save NFC Tag Data", bg='green', width=16, state=DISABLED, command=lambda: save_tag(sStatus, int(e1.get()), e2.get(), e3.get(), e4.get(), e5.get() , str(temperature.get()), str(spoolsize.get()), e7.get(), flipper.get()))
+b7.grid(row=1, column=1)
+
+def get_tag(sStatus, id_text, UID1_text, UID2_text, password_text, pack_text):
+    b7['state'] = NORMAL
+    newUID(sStatus, id_text, UID1_text, UID2_text, password_text, pack_text)
+
+b1=Button(window, text="Get Random NFC Tag", bg='green', width=16, command=lambda: get_tag(sStatus, id_text, UID1_text, UID2_text, password_text, pack_text))
 b1.grid(row=1, column=0)
 
 b2=Button(window, text="Use This UID", bg='green', width=16, command=lambda: useUID(sStatus, int(e1.get())))
 b2.grid(row=12, column=5)
 
-b7=Button(window, text="Save NFC Tag Data", bg='green', width=16, command=lambda: generateTagData(sStatus, e2.get(), e3.get(), e4.get(), e5.get() , str(temperature.get()), str(spoolsize.get()), e7.get()))
-b7.grid(row=1, column=1)
 
 b8=Button(window, text="Program EMUtag", bg='green', width=16, state=DISABLED, command=lambda: notyet(window))
 b8.grid(row=12, column=6)
