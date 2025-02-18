@@ -1,3 +1,6 @@
+# Our DB file, since a clean version is provided by default.
+davincipw.db
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

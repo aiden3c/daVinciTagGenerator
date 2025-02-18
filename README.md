@@ -1,3 +1,10 @@
+# daVinciTagGenerator
+A Python 3 port of daVinciJrTagManager, with a few buttons re-arranged, re-programmed, and re-named for quicker NFC data file generation.
+
+It also gives an option to export to flipper zero's NFC format.
+
+
+
 # daVinciJrTagManager
 a UID / Password manager for the daVinci jr 3D printer
 
@@ -16,7 +23,7 @@ A help system is available to help guide the useage of daVinciJrTagManager
 The main program is dvjTagManager.py and is written in Python 2.7
 
 NOTE:  You do not need to import the included csv file.  It is included only to show the format
-necessary to import additional UID / Password / PACK combinations.  
+necessary to import additional UID / Password / PACK combinations.
 
 Just download the zip file from GitHub, Unpack it to the directory of your choice and
 just run dvjTagManager.py ( from that directory )and you have 400+ codes to start using.
