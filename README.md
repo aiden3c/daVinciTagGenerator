@@ -1,7 +1,7 @@
 # daVinciTagGenerator
 A Python 3 port of daVinciJrTagManager, with a few buttons re-arranged, re-programmed, and re-named for quicker NFC data file generation.
 
-It also gives an option to export to flipper zero's NFC format.
+It also gives an option to export to the Flipper Zero's NFC format.
 
 
 
